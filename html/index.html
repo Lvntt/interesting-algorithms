@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Algorithms</title>
+        <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+
+        <!--================ JQUERY FOR NESTED HTML ================-->
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+        <!--================ FONTAWESOME ICONS ================-->
+        <script src="https://kit.fontawesome.com/f1235aa355.js" crossorigin="anonymous"></script>
+
+        <script>
+            $(function() {
+                $("#includeAstarHTML").load("algorithms/astar.html");
+                $("#includeClusteringHTML").load("algorithms/clustering.html");
+                $("#includeGeneticHTML").load("algorithms/genetic.html");
+            });
+        </script>
+    </head>
+
+    <body>
+        <nav class="sidebar">
+            <ul class="sidebarList">
+                <a href="#" class="sidebarLink" data-tab="tab1">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="sidebarName">Link1</span>
+                </a>
+
+                <a href="#" class="sidebarLink" data-tab="tab2">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="sidebarName">Link2</span>
+                </a>
+
+                <a href="#" class="sidebarLink" data-tab="tab3">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="sidebarName">Link3</span>
+                </a>
+            </ul>
+
+            <!-- Shapes -->
+            <div class="sidebarCircle-1"></div>
+            <div class="sidebarCircle-2"></div>
+
+            <div class="sidebarSquare-1"></div>
+            <div class="sidebarSquare-2"></div>
+        </nav>
+
+        <main>
+            <div class="content">
+                <div id="tab1" class="tabContent">
+                    <div id="includeAstarHTML"></div>
+                </div>
+
+                <div id="tab2" class="tabContent">
+                    <div id="includeClusteringHTML"></div>
+                </div>
+
+                <div id="tab3" class="tabContent">
+                    <div id="includeGeneticHTML"></div>
+                </div>
+            </div>
+        </main>
+
+        <script src="../js/script.js"></script>
+    </body>
+</html>
