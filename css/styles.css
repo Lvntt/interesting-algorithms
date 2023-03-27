@@ -1,0 +1,146 @@
+/*================ VARIABLES ================*/
+:root {
+    --firstColor: #FDAD1C;
+    --secondColor: #595959;
+    --thirdColor: #404040;
+    --bodyColor: #FDF7E1;
+    --blackColor: #000;
+    --whiteColor: #fff;
+
+    --bodyFontFmaily: "PT Astra Sans", Calibri, Tahoma, sans-serif;
+    --smallFontSize: .813rem;
+}
+
+/*================ BASE ================*/
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: var(--bodyFontFmaily);
+    background-color: var(--bodyColor);
+    font-size: large;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+main {
+    margin-inline: 6rem 1rem;
+    padding-block: 2rem;
+}
+
+/*================ SIDEBAR ================*/
+.sidebar {
+    width: 72px;
+    height: max-content;
+    position: fixed;
+    inset: 0;
+    margin: auto 0;
+}
+
+.sidebarList {
+    position: relative;
+    background-color: var(--firstColor);
+    padding-block: 70px;
+    border-radius: 0 51px 51px 0;
+    display: grid;
+    justify-content: center;
+    row-gap: 2rem;
+}
+
+.sidebarLink {
+    position: relative;
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background .4s;
+}
+
+.sidebarLink i {
+    font-size: 1.25rem;
+    color: var(--whiteColor);
+    transition: color .4s;
+}
+
+.sidebarLink:hover .sidebarName {
+    opacity: 1;
+    transform: translateX(57px);
+}
+
+.sidebarName {
+    position: absolute;
+    top: 0;
+    transform: translateX(56px);
+    background-color: var(--blackColor);
+    color: var(--whiteColor);
+    font-size: var(--smallFontSize);
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 3rem;
+    pointer-events: none;
+    transition: transform .5s, opacity .5s;
+    opacity: 0;
+}
+
+/* Shapes */
+.sidebarCircle-1,
+.sidebarCircle-2 {
+    width: 80px;
+    height: 80px;
+    background-color: var(--bodyColor);
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+}
+
+.sidebarCircle-1 {
+    top: -78px;
+}
+
+.sidebarCircle-2 {
+    bottom: -78px;
+}
+
+.sidebarSquare-1,
+.sidebarSquare-2 {
+    width: 35px;
+    height: 40px;
+    background-color: var(--firstColor);
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+.sidebarSquare-1 {
+    top: -39px;
+}
+
+.sidebarSquare-2 {
+    bottom: -39px;
+}
+
+.content {
+    margin-top: 100px;
+    margin-left: 400px;
+}
+
+.tabContent {
+    display: none;
+}
+
+.active {
+    background-color: var(--whiteColor);
+}
+
+.active i {
+    color: var(--firstColor)
+}
