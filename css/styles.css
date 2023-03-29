@@ -142,5 +142,24 @@ main {
 }
 
 .active i {
-    color: var(--firstColor)
+    color: var(--firstColor);
+}
+
+main {
+    height: 100vh;
+}
+
+#mainContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+#leftContent {
+    margin-right: 40px;
+}
+
+#rightContent {
+    margin-left: 40px;
 }
