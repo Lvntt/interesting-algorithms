@@ -156,10 +156,15 @@ main {
     margin: auto;
 }
 
-#leftContent {
-    margin-right: 40px;
+#setupContent {
+    margin-left: 40px;
+    display: flex;
+    flex-direction: column;
 }
 
-#rightContent {
-    margin-left: 40px;
+#setupContent button {
+    width: 150px;
+    height: 30px;
+    align-content: center;
+    margin: 20px;
 }
