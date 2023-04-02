@@ -13,7 +13,8 @@ class Cell {
         this.cameFrom = undefined;
 
 
-        this.isObstacle = random(1) < 0.3;
+        // this.isObstacle = random(1) < 0.3;
+        this.isObstacle = false;
 
         this.show = function(cellColor) {
             this.cellColor = cellColor;
@@ -39,12 +40,8 @@ class Cell {
         }
 
         this.isClicked = function() {
-            if (
-                this.xIndex * cellSideInPixels < mouseX && mouseX < this.xIndex * cellSideInPixels + cellSideInPixels
-                && this.yIndex * cellSideInPixels < mouseY && mouseY < this.yIndex * cellSideInPixels + cellSideInPixels
-            ) {
-                return true
-            }
+            return this.xIndex * cellSideInPixels < mouseX && mouseX < this.xIndex * cellSideInPixels + cellSideInPixels
+                && this.yIndex * cellSideInPixels < mouseY && mouseY < this.yIndex * cellSideInPixels + cellSideInPixels;
         }
     }
 }

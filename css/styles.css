@@ -157,14 +157,32 @@ main {
 }
 
 #setupContent {
-    margin-left: 40px;
+    width: 350px;
+    height: 550px;
+    margin-left: 120px;
     display: flex;
     flex-direction: column;
+    background-color: #FEC04D;
+    justify-content: center;
+    align-items: center;
+    border-radius: 17%;
 }
 
 #setupContent button {
-    width: 150px;
-    height: 30px;
-    align-content: center;
+    width: 240px;
+    height: 35px;
     margin: 20px;
+    background-color: #666666;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    align-content: center;
+}
+
+#setupContent p {
+    color: #7e5201;
+    font-size: 17px;
+    margin: 15px;
 }

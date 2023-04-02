@@ -10,12 +10,16 @@ let setStartMode = false;
 let setFinishMode = false;
 
 let canvas;
+let currentCell;
 let runAlgorithmButton;
 let resetAlgorithmButton;
 let setStartButton;
 let setFinishButton;
 let sideSizeSlider;
-let currentCell;
+let sideSizeLabel;
+let sideSizeValue;
+let generateLabyrinthButton;
+let infoLabel;
 
 let openSet = [];
 let closedSet = [];
@@ -47,13 +51,14 @@ function initAlgorithm() {
 }
 
 function runAlgorithm() {
-    if (!start || !finish) {
-        console.error("Please select a start and finish point before running the algorithm.");
+    if (started) {
         return;
     }
 
-    if (started) {
-        resetAlgorithm();
+    if (!start || !finish) {
+        console.error("Please select a start and finish point before running the algorithm.");
+        infoLabel.html("Выберите начальную и конечную точки");
+        return;
     }
 
     started = true;
@@ -70,6 +75,7 @@ function resetAlgorithm() {
     pathFound = false;
 
     started = false;
+    infoLabel.html("A*");
     initAlgorithm();
 }
 
@@ -85,28 +91,139 @@ function updateCellSideCount() {
     cellSideCount = sideSizeSlider.value();
     cellSideInPixels = windowWidth / cellSideCount;
     resetAlgorithm();
+    sideSizeValue.html(sideSizeSlider.value());
+}
+
+function hasSamePoint(pointX, pointY, pointArr) {
+    for (let i = 0; i < pointArr.length; i++) {
+        if (pointArr[i].x === pointX && pointArr[i].y === pointY) {
+            return true
+        }
+    }
+    return false
+}
+
+function generateLabyrinth() {
+    resetAlgorithm();
+
+    for (let i = 0; i < cellSideCount; i++) {
+        for (let j = 0; j < cellSideCount; j++) {
+            grid[i][j].isObstacle = true;
+        }
+    }
+
+    let x = int(random(0, cellSideCount / 2 - 1) * 2 + 1);
+    let y = int(random(0, cellSideCount / 2 - 1) * 2 + 1);
+    grid[x][y].isObstacle = false;
+
+    let pointsToCheck = [];
+
+    let possibleMovesX = [2, -2, 0, 0];
+    let possibleMovesY = [0, 0, 2, -2];
+
+    for (let i = 0; i < 4; i++) {
+        let xCurrent = x + possibleMovesX[i];
+        let yCurrent = y + possibleMovesY[i];
+        if (xCurrent >= 0 && xCurrent < cellSideCount && yCurrent >= 0 && yCurrent < cellSideCount) {
+            pointsToCheck.push(new Point(xCurrent, yCurrent));
+        }
+    }
+
+    console.log(pointsToCheck);
+
+    while (pointsToCheck.length > 0) {
+        let index = int(random(0, pointsToCheck.length));
+        let point = pointsToCheck[index];
+        x = point.x;
+        y = point.y;
+        grid[x][y].isObstacle = false;
+        pointsToCheck.splice(index, 1);
+
+        let directions = ["NORTH", "SOUTH", "EAST", "WEST"];
+        while (directions.length > 0) {
+            let directionIndex = int(random(0, directions.length));
+            switch (directions[directionIndex]) {
+                case "NORTH":
+                    if (y - 2 >= 0 && !grid[x][y - 2].isObstacle) {
+                        grid[x][y - 1].isObstacle = false;
+                        directions = [];
+                    }
+                    break;
+                case "SOUTH":
+                    if (y + 2 < cellSideCount && !grid[x][y + 2].isObstacle) {
+                        grid[x][y + 1].isObstacle = false;
+                        directions = [];
+                    }
+                    break;
+                case "EAST":
+                    if (x - 2 >= 0 && !grid[x - 2][y].isObstacle) {
+                        grid[x - 1][y].isObstacle = false;
+                        directions = [];
+                    }
+                    break;
+                case "WEST":
+                    if (x + 2 < cellSideCount && !grid[x + 2][y].isObstacle) {
+                        grid[x + 1][y].isObstacle = false;
+                        directions = [];
+                    }
+                    break;
+            }
+            directions.splice(directionIndex, 1);
+        }
+
+        if (y - 2 >= 0 && grid[x][y - 2].isObstacle && !hasSamePoint(x, y - 2, pointsToCheck)) {
+            pointsToCheck.push(new Point(x, y - 2));
+        }
+        if (y + 2 < cellSideCount && grid[x][y + 2].isObstacle && !hasSamePoint(x, y + 2, pointsToCheck)) {
+            pointsToCheck.push(new Point(x, y + 2));
+        }
+        if (x - 2 >= 0 && grid[x - 2][y].isObstacle && !hasSamePoint(x - 2, y, pointsToCheck)) {
+            pointsToCheck.push(new Point(x - 2, y));
+        }
+        if (x + 2 < cellSideCount && grid[x + 2][y].isObstacle && !hasSamePoint(x + 2, y, pointsToCheck)) {
+            pointsToCheck.push(new Point(x + 2, y));
+        }
+    }
+
+    for (let i = 0; i < cellSideCount; i++) {
+        for (let j = 0; j < cellSideCount; j++) {
+            grid[i][j].show(grid[i][j].cellColor);
+        }
+    }
 }
 
 function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
-    runAlgorithmButton = createButton("Run");
-    resetAlgorithmButton = createButton("Reset");
-    setStartButton = createButton("Set a start point");
-    setFinishButton = createButton("Set a finish point");
+    infoLabel = createP("A*");
+    sideSizeLabel = createP("Установить размер стороны лабиринта:");
     sideSizeSlider = createSlider(5, 30, 15, 1);
+    sideSizeValue = createDiv(sideSizeSlider.value());
+    runAlgorithmButton = createButton("Запустить алгоритм");
+    resetAlgorithmButton = createButton("Сбросить лабиринт");
+    setStartButton = createButton("Установить начальную точку");
+    setFinishButton = createButton("Установить конечную точку");
+    generateLabyrinthButton = createButton("Сгенерировать лабиринт");
 
     canvas.parent("algorithmWindow");
+    infoLabel.parent("setupContent");
+    sideSizeLabel.parent("setupContent");
+    sideSizeSlider.parent("setupContent");
+    sideSizeValue.parent("setupContent");
     runAlgorithmButton.parent("setupContent");
     resetAlgorithmButton.parent("setupContent");
     setStartButton.parent("setupContent");
     setFinishButton.parent("setupContent");
-    sideSizeSlider.parent("setupContent");
+    generateLabyrinthButton.parent("setupContent");
 
+    sideSizeSlider.style("width", "200px");
+    sideSizeSlider.style("color", "#666666")
+
+    sideSizeSlider.input(updateCellSideCount);
     runAlgorithmButton.mousePressed(runAlgorithm);
     resetAlgorithmButton.mousePressed(resetAlgorithm);
     setStartButton.mousePressed(setStartPoint);
     setFinishButton.mousePressed(setFinishPoint);
-    sideSizeSlider.input(updateCellSideCount);
+    generateLabyrinthButton.mousePressed(generateLabyrinth);
 
     cellSideCount = sideSizeSlider.value();
 
@@ -170,55 +287,59 @@ function draw() {
         noLoop();
     }
 
-    if (openSet.length > 0) {
-        let minIdx = 0;
-        for (let i = 0; i < openSet.length; i++) {
-            if (openSet[i].f < openSet[minIdx].f) {
-                minIdx = i;
+    if (started) {
+        if (openSet.length > 0) {
+            let minIdx = 0;
+            for (let i = 0; i < openSet.length; i++) {
+                if (openSet[i].f < openSet[minIdx].f) {
+                    minIdx = i;
+                }
             }
-        }
 
-        currentCell = openSet[minIdx];
+            currentCell = openSet[minIdx];
 
-        if (currentCell === finish) {
-            pathFound = true;
-            console.log("Path found");
-            console.log(path);
+            if (currentCell === finish) {
+                pathFound = true;
+                console.log("Path found");
+                infoLabel.html("Path found!");
+                console.log(path);
+                noLoop();
+            }
+
+            for (let i = openSet.length - 1; i >= 0; i--) {
+                if (openSet[i] === currentCell) {
+                    openSet.splice(i, 1);
+                }
+            }
+            closedSet.push(currentCell);
+
+            let neighbours = currentCell.neighbours;
+
+            for (let i = 0; i < neighbours.length; i++) {
+                let neighbour = neighbours[i];
+
+                if (!closedSet.includes(neighbour) && !currentCell.isObstacle) {
+                    let tentativeG = currentCell.g + 1;
+
+                    if (openSet.includes(neighbour)) {
+                        tentativeG = Math.min(neighbour.g, tentativeG);
+                    } else {
+                        neighbour.g = tentativeG;
+                        openSet.push(neighbour);
+                    }
+
+                    neighbour.h = getHeuristicValue(neighbour, finish);
+                    neighbour.f = neighbour.g + neighbour.h;
+                    neighbour.cameFrom = currentCell;
+                }
+            }
+
+        } else {
+            currentCell = undefined;
+            console.log("Solution does not exist");
+            infoLabel.html("Solution does not exist");
             noLoop();
         }
-
-        for (let i = openSet.length - 1; i >= 0; i--) {
-            if (openSet[i] === currentCell) {
-                openSet.splice(i, 1);
-            }
-        }
-        closedSet.push(currentCell);
-
-        let neighbours = currentCell.neighbours;
-
-        for (let i = 0; i < neighbours.length; i++) {
-            let neighbour = neighbours[i];
-
-            if (!closedSet.includes(neighbour) && !currentCell.isObstacle) {
-                let tentativeG = currentCell.g + 1;
-
-                if (openSet.includes(neighbour)) {
-                    tentativeG = Math.min(neighbour.g, tentativeG);
-                } else {
-                    neighbour.g = tentativeG;
-                    openSet.push(neighbour);
-                }
-
-                neighbour.h = getHeuristicValue(neighbour, finish);
-                neighbour.f = neighbour.g + neighbour.h;
-                neighbour.cameFrom = currentCell;
-            }
-        }
-
-    } else {
-        currentCell = undefined;
-        console.log("Solution does not exist");
-        noLoop();
     }
 
     background(0);
@@ -246,7 +367,9 @@ function draw() {
         if (path[i]) {
             path[i].show(pathColor);
         }
-        start.show(startCellColor);
+        if (start) {
+            start.show(startCellColor);
+        }
     }
     if (pathFound) {
         path[0].show(foundTargetColor);
