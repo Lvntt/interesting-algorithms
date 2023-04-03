@@ -216,7 +216,7 @@ function setup() {
     generateLabyrinthButton.parent("setupContent");
 
     sideSizeSlider.style("width", "200px");
-    sideSizeSlider.style("color", "#666666")
+    sideSizeSlider.style("color", "#666666");
 
     sideSizeSlider.input(updateCellSideCount);
     runAlgorithmButton.mousePressed(runAlgorithm);
