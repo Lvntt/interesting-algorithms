@@ -14,38 +14,63 @@
 
     <!--================ P5 ================-->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
+
+    <!--================ UBUNTU FONT ================-->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Ubuntu">
 </head>
 
 <body>
-    <nav class="sidebar">
-        <ul class="sidebarList">
-            <a href="../algorithms/astar.html" class="sidebarLink">
-                <i class="fa-solid fa-user"></i>
-                <span class="sidebarName">Link1</span>
-            </a>
+<nav class="sidebar">
+    <ul class="sidebarList">
+        <a href="../index.html" class="sidebarLink">
+            <i class="fa-solid fa-house"></i>
+            <span class="sidebarName">Home</span>
+        </a>
 
-            <a href="../algorithms/clustering.html" class="sidebarLink">
-                <i class="fa-solid fa-user"></i>
-                <span class="sidebarName">Link2</span>
-            </a>
+        <a href="../algorithms/astar.html" class="sidebarLink">
+            <i class="fa-solid fa-star"></i>
+            <span class="sidebarName">A*</span>
+        </a>
 
-            <a href="../algorithms/genetic.html" class="sidebarLink">
-                <i class="fa-solid fa-user"></i>
-                <span class="sidebarName">Link3</span>
-            </a>
-        </ul>
+        <a href="../algorithms/clustering.html" class="sidebarLink">
+            <i class="fa-solid fa-user"></i>
+            <span class="sidebarName">Link2</span>
+        </a>
 
-        <!-- Shapes -->
-        <div class="sidebarCircle-1"></div>
-        <div class="sidebarCircle-2"></div>
+        <a href="../algorithms/genetic.html" class="sidebarLink">
+            <i class="fa-solid fa-dna"></i>
+            <span class="sidebarName">Genetic algorithm</span>
+        </a>
+    </ul>
 
-        <div class="sidebarSquare-1"></div>
-        <div class="sidebarSquare-2"></div>
-    </nav>
+    <!-- Shapes -->
+    <div class="sidebarCircle-1"></div>
+    <div class="sidebarCircle-2"></div>
+
+    <div class="sidebarSquare-1"></div>
+    <div class="sidebarSquare-2"></div>
+</nav>
 </body>
 
 <main id="mainContent">
-    <div>This is Genetic test!</div>
+    <div id="canvasP"></div>
+    <div id="rightContent">
+        <p>This is Genetic test!</p>
+        <p><input id="genesNum" placeholder="Количество генов" type="number" min="2"></p>
+        <p><input id="generationsNum" placeholder="Количество поколений" type="number" min="1"></p>
+        <p>
+            <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
+                Мутация <input name="flevel" id="mutationPercent" placeholder="Процент мутации" type="range" value="0">
+                <output for="mutationPercent" name="level">0</output> %
+            </form>
+        </p>
+        <p><button onclick="clickCreatePoints()">Добавить точки</button></p>
+        <p><button onclick="clickDeletePoints()">Удалить точки</button></p>
+        <p><button onclick="clearGraphic()">Удалить график</button></p>
+        <p><button onclick="bodyGenetic()">Запуск</button></p>
+    </div>
 </main>
 
+<script src="../../js/geneticAlgorithmScripts.js"></script>
 </html>
