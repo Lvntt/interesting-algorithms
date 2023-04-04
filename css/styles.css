@@ -163,3 +163,13 @@ main {
 #rightContent {
     margin-left: 40px;
 }
+
+.error {
+    width: 200px;
+    height: 200px;
+    border: 4px solid #f77777;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: #ff0000;
+    margin-right: 40px;
+}
