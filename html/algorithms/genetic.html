@@ -39,8 +39,8 @@
         </a>
 
         <a href="../algorithms/genetic.html" class="sidebarLink">
-            <i class="fa-solid fa-user"></i>
-            <span class="sidebarName">Link3</span>
+            <i class="fa-solid fa-dna"></i>
+            <span class="sidebarName">Genetic algorithm</span>
         </a>
     </ul>
 
@@ -54,7 +54,23 @@
 </body>
 
 <main id="mainContent">
-    <div>This is Genetic test!</div>
+    <div id="canvasP"></div>
+    <div id="rightContent">
+        <p>This is Genetic test!</p>
+        <p><input id="genesNum" placeholder="Количество генов" type="number" min="2"></p>
+        <p><input id="generationsNum" placeholder="Количество поколений" type="number" min="1"></p>
+        <p>
+            <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
+                Мутация <input name="flevel" id="mutationPercent" placeholder="Процент мутации" type="range" value="0">
+                <output for="mutationPercent" name="level">0</output> %
+            </form>
+        </p>
+        <p><button onclick="clickCreatePoints()">Добавить точки</button></p>
+        <p><button onclick="clickDeletePoints()">Удалить точки</button></p>
+        <p><button onclick="clearGraphic()">Удалить график</button></p>
+        <p><button onclick="bodyGenetic()">Запуск</button></p>
+    </div>
 </main>
 
+<script src="../../js/geneticAlgorithmScripts.js"></script>
 </html>
