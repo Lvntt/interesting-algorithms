@@ -7,7 +7,7 @@
     --blackColor: #000;
     --whiteColor: #fff;
 
-    --bodyFontFmaily: "PT Astra Sans", Calibri, Tahoma, sans-serif;
+    --bodyFontFmaily: "Ubuntu", Calibri, Tahoma, sans-serif;
     --smallFontSize: .813rem;
 }
 
@@ -24,7 +24,7 @@ body {
     font-size: large;
 }
 
-ul {
+ul .sidebarList{
     list-style: none;
 }
 
@@ -90,7 +90,7 @@ main {
     opacity: 0;
 }
 
-/* Shapes */
+/*================ SHAPES ================*/
 .sidebarCircle-1,
 .sidebarCircle-2 {
     width: 80px;
@@ -128,6 +128,8 @@ main {
     bottom: -39px;
 }
 
+/*================ CONTENT ================*/
+
 .content {
     margin-top: 100px;
     margin-left: 400px;
@@ -149,6 +151,21 @@ main {
     height: 100vh;
 }
 
+.general {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    flex-direction: column;
+}
+
+.title {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: bold;
+    margin: 10px auto;
+}
+
 #mainContent {
     display: flex;
     justify-content: center;
@@ -156,9 +173,45 @@ main {
     margin: auto;
 }
 
-#leftContent {
-    margin-right: 40px;
+#setupContent {
+    width: 400px;
+    height: 550px;
+    margin-left: 80px;
+    font-family: "Ubuntu", sans-serif;
+    display: flex;
+    flex-direction: column;
+    background-color: #FEC04D;
+    justify-content: center;
+    align-items: center;
+    border-radius: 17%;
 }
+
+#setupContent button {
+    width: 260px;
+    height: 35px;
+    margin: 20px;
+    font-family: "Ubuntu", sans-serif;
+    background-color: #666666;
+    font-size: 17px;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    align-content: center;
+}
+
+#setupContent p {
+    color: #7e5201;
+    font-size: 17px;
+    margin: 15px;
+}
+
+.frog1 {
+    position: absolute;
+    top: 600px;
+    left: 0;
+}
+
 
 #rightContent {
     margin-left: 40px;
@@ -172,4 +225,8 @@ main {
     color: #ffffff;
     background-color: #ff0000;
     margin-right: 40px;
+}
+
+.list {
+    margin-bottom: 30px;
 }
