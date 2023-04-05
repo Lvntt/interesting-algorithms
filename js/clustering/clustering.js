@@ -1,34 +1,54 @@
 const POINT_DIAMETER = 40;
-const CANVAS_SIZE = 400;
+const CANVAS_SIZE = 600;
 const POPUP_WIDTH_SINGLE = 170;
 const POPUP_HEIGHT_SINGLE = 50;
 const POPUP_OFFSET_X_SINGLE = 100;
 const POPUP_OFFSET_Y_SINGLE = 30;
-const POPUP_WIDTH_COMPARISON = 170;
+const POPUP_WIDTH_COMPARISON = 190;
 const POPUP_HEIGHT_COMPARISON = 100;
-const POPUP_OFFSET_X_COMPARISON = 100;
+const POPUP_OFFSET_X_COMPARISON = 120;
 const POPUP_OFFSET_Y_COMPARISON = 50;
 const POPUP_CORNER_RADIUS = 20;
+const CANVAS_STROKE_WIDTH = 4;
+const POPUP_TEXT_SIZE_SINGLE = 14;
+const POPUP_TEXT_SIZE_COMPARISON = 12;
+
 const BORDER_COLOR = '#404040';
-const POINT_COLORS_COMPARISON_1 = ['#F2551F', '#34E298', '#1E1CA2', '#8A4063',
-    '#57B9EE', '#B029BD', '#92B3B0', '#C7A002',
-    '#2E7021', '#6C7741'];
-const POINT_COLORS_COMPARISON_2 = ['#6ABE79', '#DEEC68', '#F16919', '#52D926',
-    '#AC31A9', '#0B4CA3', '#EACAF5', '#02D7EC',
-    '#C70C24', '#260F53'];
-const POINT_COLORS_DEFAULT = ['#BDC306', '#FA0A5D', '#9D6E9F', '#31A1BC',
-    '#473F8E', '#94937C', '#46B20E', '#141356',
-    '#100412', '#64FFE3'];
+const POINT_COLORS_COMPARISON_1 = ['#F2551F', '#34E298', '#1E1CA2', '#8A4063', '#57B9EE', '#B029BD', '#92B3B0', '#C7A002', '#2E7021', '#6C7741'];
+const POINT_COLORS_COMPARISON_2 = ['#6ABE79', '#DEEC68', '#F16919', '#52D926', '#AC31A9', '#0B4CA3', '#EACAF5', '#02D7EC', '#C70C24', '#260F53'];
+const POINT_COLORS_DEFAULT = ['#BDC306', '#FA0A5D', '#9D6E9F', '#31A1BC', '#473F8E', '#94937C', '#46B20E', '#141356', '#100412', '#64FFE3'];
 const TRANSPARENT = '#00000000';
 const WHITE = '#FFF';
 const COMP_COLORS = [POINT_COLORS_DEFAULT, POINT_COLORS_COMPARISON_1, POINT_COLORS_COMPARISON_2];
+
+const ALGORITHM_NAME = 'Алгоритм кластеризации';
+const NOISE_POINT = 'Точка шума';
+const POINT_OF_CLUSTER = 'Точка кластера №';
+const POINT_AMOUNT_ERROR = 'Недостаточное кол-во точек';
+const INPUT_ERROR = 'Некорректный ввод';
+
 const Mode = Object.freeze({
-    Edit: 'Edit', KMeans: 'KMeans', Hierarchy: 'Hierarchy', DBSCAN: 'DBSCAN', Comparison: 'Comparison'
+    Edit: 'Редактирование', KMeans: 'k-средн.', Hierarchy: 'Иерархич.', DBSCAN: 'DBSCAN', Comparison: 'Сравнение'
 });
 const ModeArray = [Mode.KMeans, Mode.Hierarchy, Mode.DBSCAN];
 let currentMode = Mode.Edit;
+
 let points = [];
 let clusters = [];
+
+let canvas;
+let infoLabel;
+let clusterCountLabel;
+let clusterSlider;
+let clusterCountValue;
+let dbscanSettingsLabel;
+let epsInput;
+let minNeighborsInput;
+let editButton;
+let kMeanButton;
+let hierarchicalButton;
+let dbscanButton;
+let compareButton;
 
 class Point {
     constructor(posX, posY) {
@@ -179,70 +199,190 @@ function DBSCAN(eps, minNeighboursAmount) {
     return dbscanClusters;
 }
 
+
+
+function compare() {
+    let eps = parseFloat(epsInput.value());
+    let minNeighborsAmount = parseInt(minNeighborsInput.value());
+    if (!isNaN(eps) && !isNaN(minNeighborsAmount)) {
+        let DBSCANResult = DBSCAN(epsInput.value(), minNeighborsInput.value());
+        let hierarchicalResult = hierarchicalClustering(clusterSlider.value());
+        let kMeansResult = kMeansClustering(clusterSlider.value());
+        if (hierarchicalResult && kMeansResult) {
+            currentMode = Mode.Comparison;
+            clusters = [];
+            clusters.push(kMeansResult);
+            clusters.push(hierarchicalResult);
+            clusters.push(DBSCANResult);
+            infoLabel.html(ALGORITHM_NAME);
+        } else {
+            infoLabel.html(POINT_AMOUNT_ERROR);
+        }
+    } else {
+        infoLabel.html(INPUT_ERROR);
+    }
+}
+
+function editMode() {
+    if (currentMode !== Mode.Edit) {
+        currentMode = Mode.Edit;
+        infoLabel.html(ALGORITHM_NAME);
+    }
+}
+
+function executeKMeans() {
+    let kMeansResult = kMeansClustering(clusterSlider.value());
+    if (kMeansResult) {
+        currentMode = Mode.KMeans;
+        clusters = kMeansResult;
+        infoLabel.html(ALGORITHM_NAME);
+    } else {
+        infoLabel.html(POINT_AMOUNT_ERROR);
+    }
+}
+
+function executeHierarchical() {
+    let hierarchicalResult = hierarchicalClustering(clusterSlider.value());
+    if (hierarchicalResult) {
+        currentMode = Mode.Hierarchy;
+        clusters = hierarchicalResult;
+        infoLabel.html(ALGORITHM_NAME);
+    } else {
+        infoLabel.html(POINT_AMOUNT_ERROR);
+    }
+}
+
+function executeDBSCAN() {
+    let eps = parseFloat(epsInput.value());
+    let minNeighborsAmount = parseInt(minNeighborsInput.value());
+    if (!isNaN(eps) && !isNaN(minNeighborsAmount)) {
+        let DBSCANResult = DBSCAN(epsInput.value(), minNeighborsInput.value());
+        currentMode = Mode.DBSCAN;
+        clusters = DBSCANResult;
+        infoLabel.html(ALGORITHM_NAME);
+    } else {
+        infoLabel.html(INPUT_ERROR);
+    }
+}
+
+function setClusterSliderValue() {
+    infoLabel.html(ALGORITHM_NAME);
+    clusterCountValue.html(clusterSlider.value());
+}
+
 function setup() {
-    let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+    canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+    infoLabel = createP(ALGORITHM_NAME);
+    clusterCountLabel = createP('Количество кластеров');
+    clusterSlider = createSlider(2, POINT_COLORS_DEFAULT.length, 2, 1);
+    clusterCountValue = createP(clusterSlider.value());
+    dbscanSettingsLabel = createP('Настройки DBSCAN');
+    epsInput = createInput('100', 'number').attribute('placeholder', 'Eps-расстояние');
+    minNeighborsInput = createInput('2', 'number').attribute('placeholder', 'Мин. кол-во соседей');
+    editButton = createButton('Редактировать');
+    kMeanButton = createButton('Кластеризация k-средних');
+    hierarchicalButton = createButton('Иерархическая кластеризация');
+    dbscanButton = createButton('Кластеризация DBSCAN');
+    compareButton = createButton('Сравнить алгоритмы');
+
     canvas.parent('algorithmWindow');
-    canvas.mouseClicked(canvasClicked);
-    let editButton = createButton('Edit mode');
-    editButton.parent('setupContent');
-    editButton.mousePressed(() => {
-        if (currentMode !== Mode.Edit) {
-            currentMode = Mode.Edit;
-        }
-    });
-    let slider = createSlider(2, POINT_COLORS_DEFAULT.length, 2, 1);
-    slider.parent('setupContent');
-    let kMeanButton = createButton('K-Mean clustering');
-    kMeanButton.parent('setupContent');
-    kMeanButton.mousePressed(() => {
-        let kMeansResult = kMeansClustering(slider.value());
-        if (kMeansResult) {
-            currentMode = Mode.KMeans;
-            clusters = kMeansResult;
-        }
-    });
-    let hierarchicalButton = createButton('Hierarchical clustering');
-    hierarchicalButton.parent('setupContent');
-    hierarchicalButton.mousePressed(() => {
-        let hierarchicalResult = hierarchicalClustering(slider.value());
-        if (hierarchicalResult) {
-            currentMode = Mode.Hierarchy;
-            clusters = hierarchicalResult;
-        }
-    });
-    let epsInput = createInput('', 'number');
+    infoLabel.parent('setupContent');
+    clusterCountLabel.parent('setupContent');
+    clusterSlider.parent('setupContent');
+    clusterCountValue.parent('setupContent');
+    dbscanSettingsLabel.parent('setupContent');
     epsInput.parent('setupContent');
-    let minNeighborsInput = createInput('', 'number');
     minNeighborsInput.parent('setupContent');
-    let dbscanButton = createButton('DBSCAN');
+    editButton.parent('setupContent');
+    kMeanButton.parent('setupContent');
+    hierarchicalButton.parent('setupContent');
     dbscanButton.parent('setupContent');
-    dbscanButton.mousePressed(() => {
-        let eps = parseFloat(epsInput.value());
-        let minNeighborsAmount = parseInt(minNeighborsInput.value());
-        if (!isNaN(eps) && !isNaN(minNeighborsAmount)) {
-            let DBSCANResult = DBSCAN(epsInput.value(), minNeighborsInput.value());
-            currentMode = Mode.DBSCAN;
-            clusters = DBSCANResult;
-        }
-    });
-    let compareButton = createButton('Compare');
     compareButton.parent('setupContent');
-    compareButton.mousePressed(() => {
-        let eps = parseFloat(epsInput.value());
-        let minNeighborsAmount = parseInt(minNeighborsInput.value());
-        if (!isNaN(eps) && !isNaN(minNeighborsAmount)) {
-            let DBSCANResult = DBSCAN(epsInput.value(), minNeighborsInput.value());
-            let hierarchicalResult = hierarchicalClustering(slider.value());
-            let kMeansResult = kMeansClustering(slider.value());
-            if (hierarchicalResult && kMeansResult) {
-                currentMode = Mode.Comparison;
-                clusters = [];
-                clusters.push(kMeansResult);
-                clusters.push(hierarchicalResult);
-                clusters.push(DBSCANResult);
+    canvas.mouseClicked(canvasClicked);
+
+    clusterSlider.input(setClusterSliderValue);
+    editButton.mousePressed(editMode);
+    kMeanButton.mousePressed(executeKMeans);
+    hierarchicalButton.mousePressed(executeHierarchical);
+    dbscanButton.mousePressed(executeDBSCAN);
+    compareButton.mousePressed(compare);
+}
+
+function drawComparisonPopup(pointIsHovered, hoveredPoints, hoveredClusterIndices) {
+    if (pointIsHovered) {
+        fill(BORDER_COLOR);
+        noStroke();
+        rectMode(CENTER);
+        let xCoordinate = (hoveredPoints[0].posX - POPUP_OFFSET_X_COMPARISON - POPUP_WIDTH_COMPARISON / 2 > 0 ? hoveredPoints[0].posX - POPUP_OFFSET_X_COMPARISON : hoveredPoints[0].posX + POPUP_OFFSET_X_COMPARISON);
+        let yCoordinate = (hoveredPoints[0].posY - POPUP_OFFSET_Y_COMPARISON - POPUP_HEIGHT_COMPARISON / 2 > 0 ? hoveredPoints[0].posY - POPUP_OFFSET_Y_COMPARISON : hoveredPoints[0].posY + POPUP_OFFSET_Y_COMPARISON);
+        let texts = [];
+        for (let point of hoveredClusterIndices) {
+            texts.push(ModeArray[point[0]] + ': ' + (ModeArray[point[0]] === Mode.DBSCAN && point[1] === 0 ? NOISE_POINT : POINT_OF_CLUSTER + point[1]));
+        }
+        rect(xCoordinate, yCoordinate, POPUP_WIDTH_COMPARISON, POPUP_HEIGHT_COMPARISON, POPUP_CORNER_RADIUS);
+        fill(WHITE);
+        textAlign(CENTER, CENTER);
+        textSize(POPUP_TEXT_SIZE_COMPARISON);
+        text(texts[0], xCoordinate, yCoordinate - POPUP_HEIGHT_COMPARISON / 3);
+        text(texts[1], xCoordinate, yCoordinate);
+        text(texts[2], xCoordinate, yCoordinate + POPUP_HEIGHT_COMPARISON / 3);
+    }
+}
+
+function drawPopup(pointIsHovered, hoveredPoint, pointClusterIndex) {
+    if (pointIsHovered) {
+        fill(BORDER_COLOR);
+        noStroke();
+        rectMode(CENTER);
+        let xCoordinate = (hoveredPoint.posX - POPUP_OFFSET_X_SINGLE - POPUP_WIDTH_SINGLE / 2 > 0 ? hoveredPoint.posX - POPUP_OFFSET_X_SINGLE : hoveredPoint.posX + POPUP_OFFSET_X_SINGLE);
+        let yCoordinate = (hoveredPoint.posY - POPUP_OFFSET_Y_SINGLE - POPUP_HEIGHT_SINGLE / 2 > 0 ? hoveredPoint.posY - POPUP_OFFSET_Y_SINGLE : hoveredPoint.posY + POPUP_OFFSET_Y_SINGLE);
+        let popupText = (currentMode === Mode.DBSCAN && pointClusterIndex === 0 ? NOISE_POINT : POINT_OF_CLUSTER + pointClusterIndex);
+        rect(xCoordinate, yCoordinate, POPUP_WIDTH_SINGLE, POPUP_HEIGHT_SINGLE, POPUP_CORNER_RADIUS);
+        fill(WHITE);
+        textAlign(CENTER, CENTER);
+        textSize(POPUP_TEXT_SIZE_SINGLE);
+        text(popupText, xCoordinate, yCoordinate);
+    }
+}
+
+function drawComparison() {
+    let pointIsHovered = false;
+    let hoveredPoints = [];
+    let hoveredClusterIndices = [];
+    for (let clusterGroupIndex of clusters.keys()) {
+        for (let clusterIndex of clusters[clusterGroupIndex].keys()) {
+            for (let point of clusters[clusterGroupIndex][clusterIndex]) {
+                if (dist(point.posX, point.posY, mouseX, mouseY) <= POINT_DIAMETER / 2) {
+                    pointIsHovered = true;
+                    hoveredPoints.push(point);
+                    hoveredClusterIndices.push([clusterGroupIndex, clusterIndex]);
+                }
+                fill(COMP_COLORS[clusterGroupIndex][clusterIndex % POINT_COLORS_DEFAULT.length]);
+                noStroke();
+                arc(point.posX, point.posY, POINT_DIAMETER, POINT_DIAMETER, clusterGroupIndex * 2 * (PI / 3), (clusterGroupIndex + 1) * 2 * (PI / 3));
             }
         }
-    });
+    }
+    drawComparisonPopup(pointIsHovered, hoveredPoints, hoveredClusterIndices);
+}
+
+function drawSingleMethod() {
+    let pointIsHovered = false;
+    let hoveredPoint;
+    let pointClusterIndex;
+    for (let clusterIndex of clusters.keys()) {
+        for (let point of clusters[clusterIndex]) {
+            if (!pointIsHovered && dist(point.posX, point.posY, mouseX, mouseY) <= POINT_DIAMETER / 2) {
+                pointIsHovered = true;
+                hoveredPoint = point;
+                pointClusterIndex = clusterIndex;
+            }
+            fill(POINT_COLORS_DEFAULT[clusterIndex % POINT_COLORS_DEFAULT.length]);
+            noStroke();
+            circle(point.posX, point.posY, POINT_DIAMETER);
+        }
+    }
+    drawPopup(pointIsHovered, hoveredPoint, pointClusterIndex);
 }
 
 function draw() {
@@ -250,9 +390,9 @@ function draw() {
     background(TRANSPARENT);
     rectMode(CORNER);
     fill(TRANSPARENT);
-    strokeWeight(4);
+    strokeWeight(CANVAS_STROKE_WIDTH);
     stroke(BORDER_COLOR);
-    rect(0, 0, 400, 400);
+    rect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     if (currentMode === Mode.Edit) {
         for (let point of points) {
             fill(BORDER_COLOR);
@@ -261,71 +401,10 @@ function draw() {
         }
     } else {
         if (currentMode !== Mode.Comparison) {
-                let pointIsHovered = false;
-                let hoveredPoint;
-                let pointClusterIndex;
-                for (let clusterIndex of clusters.keys()) {
-                    for (let point of clusters[clusterIndex]) {
-                        if (!pointIsHovered && dist(point.posX, point.posY, mouseX, mouseY) <= POINT_DIAMETER / 2) {
-                            pointIsHovered = true;
-                            hoveredPoint = point;
-                            pointClusterIndex = clusterIndex;
-                        }
-                        fill(POINT_COLORS_DEFAULT[clusterIndex % POINT_COLORS_DEFAULT.length]);
-                        noStroke();
-                        circle(point.posX, point.posY, POINT_DIAMETER);
-                    }
-                }
-                if (pointIsHovered) {
-                    fill(BORDER_COLOR);
-                    noStroke();
-                    rectMode(CENTER);
-                    let xCoordinate = (hoveredPoint.posX - POPUP_OFFSET_X_SINGLE - POPUP_WIDTH_SINGLE / 2 > 0 ? hoveredPoint.posX - POPUP_OFFSET_X_SINGLE : hoveredPoint.posX + POPUP_OFFSET_X_SINGLE);
-                    let yCoordinate = (hoveredPoint.posY - POPUP_OFFSET_Y_SINGLE - POPUP_HEIGHT_SINGLE / 2 > 0 ? hoveredPoint.posY - POPUP_OFFSET_Y_SINGLE : hoveredPoint.posY + POPUP_OFFSET_Y_SINGLE);
-                    let popupText = (currentMode === Mode.DBSCAN && pointClusterIndex === 0 ? 'Noise point' : 'Point of cluster #' + pointClusterIndex);
-                    rect(xCoordinate, yCoordinate, POPUP_WIDTH_SINGLE, POPUP_HEIGHT_SINGLE, POPUP_CORNER_RADIUS);
-                    fill(WHITE);
-                    textAlign(CENTER, CENTER);
-                    textSize(14);
-                    text(popupText, xCoordinate, yCoordinate);
-                }
-            } else {
-                let pointIsHovered = false;
-                let hoveredPoints = [];
-                let hoveredClusterIndices = [];
-                for (let clusterGroupIndex of clusters.keys()) {
-                    for (let clusterIndex of clusters[clusterGroupIndex].keys()) {
-                        for (let point of clusters[clusterGroupIndex][clusterIndex]) {
-                            if (dist(point.posX, point.posY, mouseX, mouseY) <= POINT_DIAMETER / 2) {
-                                pointIsHovered = true;
-                                hoveredPoints.push(point);
-                                hoveredClusterIndices.push([clusterGroupIndex,clusterIndex]);
-                            }
-                            fill(COMP_COLORS[clusterGroupIndex][clusterIndex % POINT_COLORS_DEFAULT.length]);
-                            noStroke();
-                            arc(point.posX, point.posY, POINT_DIAMETER, POINT_DIAMETER, clusterGroupIndex * 2 * (PI / 3), (clusterGroupIndex + 1) * 2 * (PI / 3));
-                        }
-                    }
-                }
-                if(pointIsHovered) {
-                    fill(BORDER_COLOR);
-                    noStroke();
-                    rectMode(CENTER);
-                    let xCoordinate = (hoveredPoints[0].posX - POPUP_OFFSET_X_COMPARISON - POPUP_WIDTH_COMPARISON / 2 > 0 ? hoveredPoints[0].posX - POPUP_OFFSET_X_COMPARISON : hoveredPoints[0].posX + POPUP_OFFSET_X_COMPARISON);
-                    let yCoordinate = (hoveredPoints[0].posY - POPUP_OFFSET_Y_COMPARISON - POPUP_HEIGHT_COMPARISON /2 > 0 ? hoveredPoints[0].posY - POPUP_OFFSET_Y_COMPARISON : hoveredPoints[0].posY + POPUP_OFFSET_Y_COMPARISON);
-                    let texts = [];
-                    for(let point of hoveredClusterIndices) {
-                        texts.push(ModeArray[point[0]] + ': ' + (ModeArray[point[0]] === Mode.DBSCAN && point[1] === 0 ? 'Noise point' : 'Point of cluster #' + point[1]));
-                    }
-                    rect(xCoordinate, yCoordinate, POPUP_WIDTH_COMPARISON, POPUP_HEIGHT_COMPARISON, POPUP_CORNER_RADIUS);
-                    fill(WHITE);
-                    textAlign(CENTER, CENTER);
-                    textSize(12);
-                    text(texts[0], xCoordinate, yCoordinate - POPUP_HEIGHT_COMPARISON / 3);
-                    text(texts[1], xCoordinate, yCoordinate);
-                    text(texts[2], xCoordinate, yCoordinate + POPUP_HEIGHT_COMPARISON / 3);
-                }
-            }
+            drawSingleMethod();
+        } else {
+            drawComparison();
+        }
     }
 }
 
