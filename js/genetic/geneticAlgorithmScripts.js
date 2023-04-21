@@ -8,10 +8,8 @@ let actionsPoint = false;
 let indexI = 0;
 let colorPoint = "#595959";
 let subsequence;
-let factorial;
-let genesNumber;
-let mutationPercentage;
-let generationsNumber;
+let end = 0;
+let bestPath;
 
 function setup() {
     clickLock = true;
@@ -34,7 +32,7 @@ function Bubble(x, y)
     this.deletePoint = function ()
     {
         let d = dist(mouseX, mouseY, this.x, this.y);
-        return d <= 20;
+        return d <= 10;
     }
 }
 
@@ -140,25 +138,11 @@ function draw() {
         return permutation;
     }
 
-    function creatingGenes(subsequence, genesNumber)
+    function creatingChromosome(subsequence)
     {
         let lengthPath = 0;
 
-        for (let i = 0; i < (subsequence.length - 1); i++)
-        {
-            lengthPath = lengthPath + dist(points[subsequence[i]].x, points[subsequence[i]].y,
-                points[subsequence[i+1]].x, points[subsequence[i+1]].y);
-        }
-
-        lengthPath = lengthPath + dist(points[subsequence[subsequence.length - 1]].x, points[subsequence[subsequence.length - 1]].y,
-            points[subsequence[0]].x, points[subsequence[0]].y);
-
-        let w = new Paths(subsequence, lengthPath);
-        ways.push(w);
-
-        lengthPath = 0;
-
-        for (let i = 1; i < genesNumber; i++)
+        for (let i = 0; i < points.length * points.length; i++)
         {
             subsequence = createPermutation(subsequence);
 
@@ -240,37 +224,8 @@ function draw() {
 
     function selection()
     {
-        let lengthPath = 0;
-
-        for (let i = 0; i < (descendant1.length - 1); i++)
-        {
-            lengthPath = lengthPath + dist(points[descendant1[i]].x, points[descendant1[i]].y,
-                points[descendant1[i+1]].x, points[descendant1[i+1]].y);
-        }
-
-        lengthPath = lengthPath + dist(points[descendant1[descendant1.length - 1]].x, points[descendant1[descendant1.length - 1]].y,
-            points[descendant1[0]].x, points[descendant1[0]].y);
-
-        let w = new Paths(descendant1, lengthPath);
-        ways.push(w);
-
-        lengthPath = 0;
-
-        for (let i = 0; i < (descendant2.length - 1); i++)
-        {
-            lengthPath = lengthPath + dist(points[descendant2[i]].x, points[descendant2[i]].y,
-                points[descendant2[i+1]].x, points[descendant2[i+1]].y);
-        }
-
-        lengthPath = lengthPath + dist(points[descendant2[descendant2.length - 1]].x, points[descendant2[descendant2.length - 1]].y,
-            points[descendant2[0]].x, points[descendant2[0]].y);
-
-        w = new Paths(descendant2, lengthPath);
-        ways.push(w);
-
         ways.sort((a,b)=>(a.lengthPath - b.lengthPath));
-
-        ways.splice(ways.length - 2);
+        ways = ways.slice(0, points.length * points.length);
     }
 
     function printPath()
@@ -286,111 +241,75 @@ function draw() {
         lines.push(l);
     }
 
-    if (!clickLock) {
-
+    if (!clickLock)
+    {
         if (indexI === 0)
         {
             colorPoint = "#FDAD1C";
             subsequence = [];
-            factorial = 1;
-            genesNumber = document.getElementById('genesNum').value;
-            mutationPercentage = document.getElementById('mutationPercent').value;
-            generationsNumber = parseInt(document.getElementById('generationsNum').value);
 
-            for (let i = 1; i <= points.length; i++)
+            for (let i = 0; i < points.length; i++)
             {
-                subsequence.push(i - 1);
-                factorial = factorial * i;
+                subsequence.push(i);
             }
 
-            if (points.length <= 1)
-            {
-                colorPoint = "#595959";
-
-                let div4 = document.createElement('div');
-                div4.className = "error";
-                div4.innerHTML = "Количество точек должно быть больше 1";
-
-                document.getElementById("mainContent").prepend(div4);
-                setTimeout(() => div4.remove(), 6000);
-
-                clickLock = true;
-                return 0;
-            }
-
-            if ((genesNumber > factorial) || (genesNumber < 2))
-            {
-                colorPoint = "#595959";
-
-                let div1 = document.createElement('div');
-                div1.className = "error";
-                div1.innerHTML = "Количество генов не может быть меньше 2 и больше факториала количества точек";
-
-                document.getElementById("mainContent").prepend(div1);
-                setTimeout(() => div1.remove(), 6000);
-
-                clickLock = true;
-                return 0;
-            }
-
-            if (generationsNumber < 1)
-            {
-                colorPoint = "#595959";
-
-                let div3 = document.createElement('div');
-                div3.className = "error";
-                div3.innerHTML = "Количество поколений не может быть меньше 1";
-
-                document.getElementById("mainContent").prepend(div3);
-                setTimeout(() => div3.remove(), 6000);
-
-                clickLock = true;
-                return 0;
-            }
-
-            if ((points.length > 1) && (points.length < 4) && (generationsNumber > 1))
-            {
-                colorPoint = "#595959";
-
-                let div5 = document.createElement('div');
-                div5.className = "error";
-                div5.innerHTML = "Если количество точек равно 2 или 3, то может быть только одно поколение";
-
-                document.getElementById("mainContent").prepend(div5);
-                setTimeout(() => div5.remove(), 6000);
-
-                clickLock = true;
-                return 0;
-            }
-
-            creatingGenes(subsequence, genesNumber);
+            creatingChromosome(subsequence);
             ways.sort((a, b) => (a.lengthPath - b.lengthPath));
             printPath();
+
+            bestPath = ways[0];
         }
 
-        if ((indexI < generationsNumber) && (indexI !== 0))
+        if (indexI !== 0)
         {
-
-            descendant1 = [];
-            descendant2 = [];
-
-            crossbreeding();
-
-            let percent = random(100);
-
-            if (percent <= mutationPercentage)
+            for (let i = 0; i < points.length * points.length; i++)
             {
+                descendant1 = [];
+                descendant2 = [];
+                crossbreeding();
                 mutation(descendant1);
-            }
-
-            percent = random(1, 101);
-
-            if (percent <= mutationPercentage)
-            {
                 mutation(descendant2);
+
+                let lengthPath = 0;
+
+                for (let i = 0; i < (descendant1.length - 1); i++)
+                {
+                    lengthPath = lengthPath + dist(points[descendant1[i]].x, points[descendant1[i]].y,
+                        points[descendant1[i+1]].x, points[descendant1[i+1]].y);
+                }
+
+                lengthPath = lengthPath + dist(points[descendant1[descendant1.length - 1]].x, points[descendant1[descendant1.length - 1]].y,
+                    points[descendant1[0]].x, points[descendant1[0]].y);
+
+                let w = new Paths(descendant1, lengthPath);
+                ways.push(w);
+
+                lengthPath = 0;
+
+                for (let i = 0; i < (descendant2.length - 1); i++)
+                {
+                    lengthPath = lengthPath + dist(points[descendant2[i]].x, points[descendant2[i]].y,
+                        points[descendant2[i+1]].x, points[descendant2[i+1]].y);
+                }
+
+                lengthPath = lengthPath + dist(points[descendant2[descendant2.length - 1]].x, points[descendant2[descendant2.length - 1]].y,
+                    points[descendant2[0]].x, points[descendant2[0]].y);
+
+                w = new Paths(descendant2, lengthPath);
+                ways.push(w);
             }
 
             selection();
+
+            if (bestPath.lengthPath !== ways[0].lengthPath)
+            {
+                bestPath = ways[0];
+                end = 0;
+            }
+            else
+            {
+                end++;
+            }
 
             fill("#FDF7E1");
             rect(0, 0, 600, 600);
@@ -406,10 +325,11 @@ function draw() {
 
         indexI++;
 
-        if (indexI === generationsNumber)
+        if (end === 500)
         {
             clickLock = true;
             indexI = 0;
+            end = 0;
             colorPoint = "#595959";
         }
     }

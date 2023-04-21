@@ -59,11 +59,15 @@
 </body>
 
 <main id="mainContent">
-    <div id="leftContent"></div>
-    <div id="algorithmWindow"></div>
-    <div id="setupContent"></div>
+    <div id="canvasP"></div>
+    <div id="setupContent">
+        <a href="../algorithms/antsBonus.html"><button>Бонусный вариант*</button></a>
+        <button onclick="clickCreatePoints()">Добавить точки</button>
+        <button onclick="clickDeletePoints()">Удалить точки</button>
+        <button onclick="clearGraphic()">Удалить график</button>
+        <button onclick="bodyAnts()">Запуск</button>
+    </div>
 </main>
 
-<script src="../../js/clustering/clustering.js"></script>
-
+<script src="../../js/ants/antsScript.js"></script>
 </html>
