@@ -59,11 +59,19 @@
 </body>
 
 <main id="mainContent">
-    <div id="leftContent"></div>
-    <div id="algorithmWindow"></div>
-    <div id="setupContent"></div>
+    <div id="canvasP"></div>
+    <div id="setupContent">
+        <a href="../algorithms/ants.html"><button>Обычный вариант*</button></a>
+        <p><input id="antsNum" placeholder="Количество муравьев" type="number" min="10"></p>
+        <p>Питательность <input id="antsSat" type="range" min="0" max="5" value="0"></p>
+        <button onclick="clickCreatePoints()">Добавить муравейник</button>
+        <button onclick="clickCreateFood()">Добавить еду</button>
+        <button onclick="clickDeleteFood()">Удалить еду</button>
+        <button onclick="clearGraphic()">Остановить алгоритм</button>
+        <button onclick="bodyAntsBonus()">Запуск</button>
+        <button onclick="createLabyrinth()">Сгенерировать лабиринт</button>
+    </div>
 </main>
 
-<script src="../../js/clustering/clustering.js"></script>
-
+<script src="../../js/ants/antsBonusScript.js"></script>
 </html>
