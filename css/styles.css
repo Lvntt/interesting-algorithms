@@ -1,14 +1,14 @@
 /*================ VARIABLES ================*/
 :root {
-    --firstColor: #FDAD1C;
-    --secondColor: #595959;
-    --thirdColor: #404040;
-    --bodyColor: #FDF7E1;
-    --blackColor: #000;
-    --whiteColor: #fff;
+    --first-color: #FDAD1C;
+    --second-color: #595959;
+    --third-color: #404040;
+    --body-color: #FDF7E1;
+    --black-color: #000;
+    --white-color: #fff;
 
-    --bodyFontFmaily: "Ubuntu", Calibri, Tahoma, sans-serif;
-    --smallFontSize: .813rem;
+    --body-font-family: "Ubuntu", Calibri, Tahoma, sans-serif;
+    --small-font-size: .813rem;
 }
 
 /*================ BASE ================*/
@@ -19,12 +19,12 @@
 }
 
 body {
-    font-family: var(--bodyFontFmaily);
-    background-color: var(--bodyColor);
+    font-family: var(--body-font-family);
+    background-color: var(--body-color);
     font-size: large;
 }
 
-ul .sidebarList{
+ul .sidebar-list{
     list-style: none;
 }
 
@@ -46,9 +46,9 @@ main {
     margin: auto 0;
 }
 
-.sidebarList {
+.sidebar-list {
     position: relative;
-    background-color: var(--firstColor);
+    background-color: var(--first-color);
     padding-block: 70px;
     border-radius: 0 51px 51px 0;
     display: grid;
@@ -56,7 +56,7 @@ main {
     row-gap: 2rem;
 }
 
-.sidebarLink {
+.sidebar-link {
     position: relative;
     display: inline-flex;
     padding: 4px;
@@ -64,24 +64,24 @@ main {
     transition: background .4s;
 }
 
-.sidebarLink i {
+.sidebar-link i {
     font-size: 1.25rem;
-    color: var(--whiteColor);
+    color: var(--white-color);
     transition: color .4s;
 }
 
-.sidebarLink:hover .sidebarName {
+.sidebar-link:hover .sidebar-name {
     opacity: 1;
     transform: translateX(57px);
 }
 
-.sidebarName {
+.sidebar-name {
     position: absolute;
     top: 0;
     transform: translateX(56px);
-    background-color: var(--blackColor);
-    color: var(--whiteColor);
-    font-size: var(--smallFontSize);
+    background-color: var(--black-color);
+    color: var(--white-color);
+    font-size: var(--small-font-size);
     font-weight: 500;
     padding: 6px 16px;
     border-radius: 3rem;
@@ -91,40 +91,40 @@ main {
 }
 
 /*================ SHAPES ================*/
-.sidebarCircle-1,
-.sidebarCircle-2 {
+.sidebar-circle-1,
+.sidebar-circle-2 {
     width: 80px;
     height: 80px;
-    background-color: var(--bodyColor);
+    background-color: var(--body-color);
     border-radius: 50%;
     position: absolute;
     left: 0;
     z-index: 10;
 }
 
-.sidebarCircle-1 {
+.sidebar-circle-1 {
     top: -78px;
 }
 
-.sidebarCircle-2 {
+.sidebar-circle-2 {
     bottom: -78px;
 }
 
-.sidebarSquare-1,
-.sidebarSquare-2 {
+.sidebar-square-1,
+.sidebar-square-2 {
     width: 35px;
     height: 40px;
-    background-color: var(--firstColor);
+    background-color: var(--first-color);
     position: absolute;
     left: 0;
     z-index: 1;
 }
 
-.sidebarSquare-1 {
+.sidebar-square-1 {
     top: -39px;
 }
 
-.sidebarSquare-2 {
+.sidebar-square-2 {
     bottom: -39px;
 }
 
@@ -140,11 +140,11 @@ main {
 }
 
 .active {
-    background-color: var(--whiteColor);
+    background-color: var(--white-color);
 }
 
 .active i {
-    color: var(--firstColor);
+    color: var(--first-color);
 }
 
 main {
@@ -166,17 +166,17 @@ main {
     margin: 10px auto;
 }
 
-#mainContent {
+#main-content {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
 }
 
-#setupContent {
-    width: 400px;
-    height: 550px;
-    margin-left: 80px;
+#setup-content {
+    width: 500px;
+    height: 650px;
+    margin-left: 130px;
     font-family: "Ubuntu", sans-serif;
     display: flex;
     flex-direction: column;
@@ -186,7 +186,7 @@ main {
     border-radius: 17%;
 }
 
-#setupContent button {
+#setup-content button {
     width: 260px;
     height: 35px;
     margin: 20px;
@@ -200,7 +200,7 @@ main {
     align-content: center;
 }
 
-#setupContent p {
+#setup-content p {
     color: #7e5201;
     font-size: 17px;
     margin: 15px;

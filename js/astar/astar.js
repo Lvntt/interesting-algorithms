@@ -1,9 +1,14 @@
-const windowWidth = 600;
-const windowHeight = 600;
+const WINDOW_WIDTH = 600;
+const WINDOW_HEIGHT = 600;
+const FRAMES_DELAY = 10;
 
-let framesDelay = 10;
 let cellSideCount = 15;
-let cellSideInPixels = windowWidth / cellSideCount;
+let cellSidePx = WINDOW_WIDTH / cellSideCount;
+
+const SELECT_START_END_ERROR = "Выберите начальную и конечную точки.";
+const PATH_FOUND_MESSAGE = "Путь найден!";
+const NO_SOLUTION_MESSAGE = "Решения не существует."
+
 let grid = new Array(cellSideCount);
 let started = false;
 let setStartMode = false;
@@ -56,8 +61,8 @@ function runAlgorithm() {
     }
 
     if (!start || !finish) {
-        console.error("Please select a start and finish point before running the algorithm.");
-        infoLabel.html("Выберите начальную и конечную точки");
+        console.error(SELECT_START_END_ERROR);
+        infoLabel.html(SELECT_START_END_ERROR);
         return;
     }
 
@@ -89,7 +94,7 @@ function setFinishPoint() {
 
 function updateCellSideCount() {
     cellSideCount = sideSizeSlider.value();
-    cellSideInPixels = windowWidth / cellSideCount;
+    cellSidePx = WINDOW_WIDTH / cellSideCount;
     resetAlgorithm();
     sideSizeValue.html(sideSizeSlider.value());
 }
@@ -139,29 +144,35 @@ function generateLabyrinth() {
         grid[x][y].isObstacle = false;
         pointsToCheck.splice(index, 1);
 
-        let directions = ["NORTH", "SOUTH", "EAST", "WEST"];
+        const Directions = Object.freeze({
+            North: "NORTH",
+            South: "SOUTH",
+            East: "EAST",
+            West: "WEST",
+        });
+        let directions = [Directions.North, Directions.South, Directions.East, Directions.West];
         while (directions.length > 0) {
             let directionIndex = int(random(0, directions.length));
             switch (directions[directionIndex]) {
-                case "NORTH":
+                case Directions.North:
                     if (y - 2 >= 0 && !grid[x][y - 2].isObstacle) {
                         grid[x][y - 1].isObstacle = false;
                         directions = [];
                     }
                     break;
-                case "SOUTH":
+                case Directions.South:
                     if (y + 2 < cellSideCount && !grid[x][y + 2].isObstacle) {
                         grid[x][y + 1].isObstacle = false;
                         directions = [];
                     }
                     break;
-                case "EAST":
+                case Directions.East:
                     if (x - 2 >= 0 && !grid[x - 2][y].isObstacle) {
                         grid[x - 1][y].isObstacle = false;
                         directions = [];
                     }
                     break;
-                case "WEST":
+                case Directions.West:
                     if (x + 2 < cellSideCount && !grid[x + 2][y].isObstacle) {
                         grid[x + 1][y].isObstacle = false;
                         directions = [];
@@ -193,7 +204,7 @@ function generateLabyrinth() {
 }
 
 function setup() {
-    canvas = createCanvas(windowWidth, windowHeight);
+    canvas = createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
     infoLabel = createP("A*");
     sideSizeLabel = createP("Установить размер стороны лабиринта:");
     sideSizeSlider = createSlider(5, 30, 15, 1);
@@ -204,16 +215,16 @@ function setup() {
     setFinishButton = createButton("Установить конечную точку");
     generateLabyrinthButton = createButton("Сгенерировать лабиринт");
 
-    canvas.parent("algorithmWindow");
-    infoLabel.parent("setupContent");
-    sideSizeLabel.parent("setupContent");
-    sideSizeSlider.parent("setupContent");
-    sideSizeValue.parent("setupContent");
-    runAlgorithmButton.parent("setupContent");
-    resetAlgorithmButton.parent("setupContent");
-    setStartButton.parent("setupContent");
-    setFinishButton.parent("setupContent");
-    generateLabyrinthButton.parent("setupContent");
+    canvas.parent("algorithm-window");
+    infoLabel.parent("setup-content");
+    sideSizeLabel.parent("setup-content");
+    sideSizeSlider.parent("setup-content");
+    sideSizeValue.parent("setup-content");
+    runAlgorithmButton.parent("setup-content");
+    resetAlgorithmButton.parent("setup-content");
+    setStartButton.parent("setup-content");
+    setFinishButton.parent("setup-content");
+    generateLabyrinthButton.parent("setup-content");
 
     sideSizeSlider.style("width", "200px");
     sideSizeSlider.style("color", "#666666");
@@ -255,7 +266,6 @@ function mousePressed() {
                     } else if (current !== start && current !== finish) {
                         current.isObstacle = !current.isObstacle;
                     }
-                    console.log(i, j, "Cell is clicked");
                 }
                 current.show(current.cellColor);
             }
@@ -300,8 +310,8 @@ function draw() {
 
             if (currentCell === finish) {
                 pathFound = true;
-                console.log("Path found");
-                infoLabel.html("Path found!");
+                console.log(PATH_FOUND_MESSAGE);
+                infoLabel.html(PATH_FOUND_MESSAGE);
                 console.log(path);
                 noLoop();
             }
@@ -335,14 +345,14 @@ function draw() {
 
         } else {
             currentCell = undefined;
-            console.log("Solution does not exist");
-            infoLabel.html("Solution does not exist");
+            console.log(NO_SOLUTION_MESSAGE);
+            infoLabel.html(NO_SOLUTION_MESSAGE);
             noLoop();
         }
     }
 
     background(0);
-    frameRate(framesDelay);
+    frameRate(FRAMES_DELAY);
 
     for (let i = 0; i < cellSideCount; i++) {
         for (let j = 0; j < cellSideCount; j++) {

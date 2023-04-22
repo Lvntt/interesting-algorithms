@@ -130,9 +130,9 @@ function setup() {
     // loadTrainingDataButton = createButton("Load training data");
     // downloadWeightsButton = createButton("Download network weights");
 
-    canvas.parent("algorithmWindow");
-    networkAnswerLabel.parent("setupContent");
-    getAnswerButton.parent("setupContent");
+    canvas.parent("algorithm-window");
+    networkAnswerLabel.parent("setup-content");
+    getAnswerButton.parent("setup-content");
     // addTrainingDataButton.parent("setupContent");
     // trainingDataAnswerLabel.parent("setupContent");
     // downloadTrainingDataButton.parent("setupContent");

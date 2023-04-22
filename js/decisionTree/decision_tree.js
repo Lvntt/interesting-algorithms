@@ -236,12 +236,12 @@ function setup() {
     csvInput.size(INPUT_WIDTH, INPUT_HEIGHT_CSV);
     csvQueryInput.size(INPUT_WIDTH, INPUT_HEIGHT_QUERY);
 
-    canvas.parent('algorithmWindow');
-    hintText.parent('setupContent');
-    csvInput.parent('setupContent');
-    buildTreeButton.parent('setupContent');
-    csvQueryInput.parent('setupContent');
-    executeQueryButton.parent('setupContent');
+    canvas.parent('algorithm-window');
+    hintText.parent('setup-content');
+    csvInput.parent('setup-content');
+    buildTreeButton.parent('setup-content');
+    csvQueryInput.parent('setup-content');
+    executeQueryButton.parent('setup-content');
 
     buildTreeButton.mousePressed(buildTree);
     executeQueryButton.mousePressed(executeQuery);

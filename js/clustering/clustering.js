@@ -285,19 +285,19 @@ function setup() {
     dbscanButton = createButton('Кластеризация DBSCAN');
     compareButton = createButton('Сравнить алгоритмы');
 
-    canvas.parent('algorithmWindow');
-    infoLabel.parent('setupContent');
-    clusterCountLabel.parent('setupContent');
-    clusterSlider.parent('setupContent');
-    clusterCountValue.parent('setupContent');
-    dbscanSettingsLabel.parent('setupContent');
-    epsInput.parent('setupContent');
-    minNeighborsInput.parent('setupContent');
-    editButton.parent('setupContent');
-    kMeanButton.parent('setupContent');
-    hierarchicalButton.parent('setupContent');
-    dbscanButton.parent('setupContent');
-    compareButton.parent('setupContent');
+    canvas.parent('algorithm-window');
+    infoLabel.parent('setup-content');
+    clusterCountLabel.parent('setup-content');
+    clusterSlider.parent('setup-content');
+    clusterCountValue.parent('setup-content');
+    dbscanSettingsLabel.parent('setup-content');
+    epsInput.parent('setup-content');
+    minNeighborsInput.parent('setup-content');
+    editButton.parent('setup-content');
+    kMeanButton.parent('setup-content');
+    hierarchicalButton.parent('setup-content');
+    dbscanButton.parent('setup-content');
+    compareButton.parent('setup-content');
     canvas.mouseClicked(canvasClicked);
 
     clusterSlider.input(setClusterSliderValue);

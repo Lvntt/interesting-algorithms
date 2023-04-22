@@ -7,7 +7,7 @@ function showTab(tabId) {
     document.getElementById(tabId).style.display = 'block';
 }
 
-let links = document.querySelectorAll('.sidebarLink')
+let links = document.querySelectorAll('.sidebar-link')
 for (let i = 0; i < links.length; i++) {
     links[i].addEventListener('click', function(e) {
         e.preventDefault();

@@ -14,7 +14,7 @@ let end = 0;
 function setup() {
     clickLock = true;
     const canvasPoint = createCanvas(600, 600);
-    canvasPoint.parent("canvasP");
+    canvasPoint.parent("canvas-p");
 }
 
 function Bubble(x, y)
@@ -78,7 +78,7 @@ function DesiredPath(x1, y1, x2, y2)
     }
 }
 
-document.getElementById("canvasP").onclick = function () {
+document.getElementById("canvas-p").onclick = function () {
     if (clickLock && actionsPoint && (ways.length === 0)) {
         let p = new Bubble(mouseX, mouseY);
         points.push(p);
