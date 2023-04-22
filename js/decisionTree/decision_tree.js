@@ -202,6 +202,7 @@ function processQueryStep(subDataset, remainingValues) {
                     foundFeature = true;
                     remainingValues.splice(featureIndex, 1);
                     processQueryStep(subDataset[i], remainingValues);
+                    break;
                 }
             }
             if (!foundFeature) {
