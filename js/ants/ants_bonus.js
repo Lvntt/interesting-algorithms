@@ -11,7 +11,7 @@ let labyrinth = [];
 function setup() {
     clickLock = true;
     const canvasPoint = createCanvas(500, 500);
-    canvasPoint.parent("canvasP");
+    canvasPoint.parent("canvas-p");
 
     for (let i = 0; i < 5; i++)
     {

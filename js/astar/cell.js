@@ -23,7 +23,7 @@ class Cell {
                 fill(this.obstacleColor);
             }
             stroke(0);
-            rect(this.xIndex * CELL_SIDE_PX, this.yIndex * CELL_SIDE_PX, CELL_SIDE_PX - 1, CELL_SIDE_PX - 1);
+            rect(this.xIndex * cellSidePx, this.yIndex * cellSidePx, cellSidePx - 1, cellSidePx - 1);
         }
 
         this.addNeighbours = function() {
@@ -33,15 +33,15 @@ class Cell {
             for (let i = 0; i < 4; i++) {
                 let xCurrent = this.xIndex + possibleMovesX[i];
                 let yCurrent = this.yIndex + possibleMovesY[i];
-                if (xCurrent >= 0 && xCurrent < CELL_SIDE_COUNT && yCurrent >= 0 && yCurrent < CELL_SIDE_COUNT) {
+                if (xCurrent >= 0 && xCurrent < cellSideCount && yCurrent >= 0 && yCurrent < cellSideCount) {
                     this.neighbours.push(grid[xCurrent][yCurrent]);
                 }
             }
         }
 
         this.isClicked = function() {
-            return this.xIndex * CELL_SIDE_PX < mouseX && mouseX < this.xIndex * CELL_SIDE_PX + CELL_SIDE_PX
-                && this.yIndex * CELL_SIDE_PX < mouseY && mouseY < this.yIndex * CELL_SIDE_PX + CELL_SIDE_PX;
+            return this.xIndex * cellSidePx < mouseX && mouseX < this.xIndex * cellSidePx + cellSidePx
+                && this.yIndex * cellSidePx < mouseY && mouseY < this.yIndex * cellSidePx + cellSidePx;
         }
     }
 }
