@@ -306,10 +306,9 @@ function draw() {
                 noLoop();
             }
 
-            for (let i = openSet.length - 1; i >= 0; i--) {
-                if (openSet[i] === currentCell) {
-                    openSet.splice(i, 1);
-                }
+            let index = openSet.indexOf(currentCell);
+            if (index !== -1) {
+                openSet.splice(index, 1);
             }
             closedSet.push(currentCell);
 
@@ -321,13 +320,13 @@ function draw() {
                 if (!closedSet.includes(neighbour) && !currentCell.isObstacle) {
                     let tentativeG = currentCell.g + 1;
 
-                    if (openSet.includes(neighbour)) {
-                        tentativeG = Math.min(neighbour.g, tentativeG);
-                    } else {
-                        neighbour.g = tentativeG;
+                    if (!openSet.includes(neighbour)) {
                         openSet.push(neighbour);
+                    } else if (tentativeG >= neighbour.g) {
+                        continue;
                     }
 
+                    neighbour.g = tentativeG;
                     neighbour.h = getHeuristicValue(neighbour, finish);
                     neighbour.f = neighbour.g + neighbour.h;
                     neighbour.cameFrom = currentCell;
