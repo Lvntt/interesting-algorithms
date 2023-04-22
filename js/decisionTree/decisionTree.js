@@ -252,12 +252,12 @@ function draw() {
     currentYOffset = NEWLINE_OFFSET;
     currentQueryIndex = -1;
     if (currentTree.length > 0) {
-        drawNode(currentTree, TEXT_SPACING, NEWLINE_OFFSET, currentQueryPath.length > 0);
+        drawNode(currentTree, TEXT_SPACING, NEWLINE_OFFSET, currentQueryPath.length > 0, currentQueryPath.length > 0);
     }
 }
 
-function drawNode(subTree, xOffset, parentYPosition, highlightQuery) {
-    let backgroundColor = highlightQuery ? QUERY_BACKGROUND : TREE_BACKGROUND;
+function drawNode(subTree, xOffset, parentYPosition, highlightQuery, prevIsHighlighted) {
+    let backgroundColor = highlightQuery && prevIsHighlighted ? QUERY_BACKGROUND : TREE_BACKGROUND;
     fill(backgroundColor);
     stroke(backgroundColor);
     strokeWeight(LINE_WIDTH);
@@ -279,7 +279,7 @@ function drawNode(subTree, xOffset, parentYPosition, highlightQuery) {
     }
     if (subTree.length > 2) {
         for (let i = 2; i < subTree.length; i++) {
-            drawNode(subTree[i], xOffset + LINE_LENGTH + TEXT_SPACING / 2 + CHILD_X_OFFSET, savedOffset, subTree[i][0] === currentQueryPath[currentQueryIndex]);
+            drawNode(subTree[i], xOffset + LINE_LENGTH + TEXT_SPACING / 2 + CHILD_X_OFFSET, savedOffset, subTree[i][0] === currentQueryPath[currentQueryIndex], highlightQuery);
         }
     }
 }
