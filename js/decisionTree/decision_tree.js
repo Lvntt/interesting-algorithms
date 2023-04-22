@@ -49,6 +49,7 @@ let currentQueryIndex = 0;
 
 let currentTree = [];
 let currentQueryPath = [];
+let currentFeatures = [];
 let currentFeaturesAmount = 0;
 
 let canvas;
@@ -159,6 +160,7 @@ function executeID3(parsedCSV) {
         for (let i = 0; i < featureNames.length - 1; i++) {
             availableFeatures.push(i);
         }
+        currentFeatures = featureNames;
         let previousParamValue = 'Корень';
         return ID3Step(dataset, featureNames, targetClasses, availableFeatures, previousParamValue);
     } else {
@@ -193,19 +195,18 @@ function buildTree() {
 
 function processQueryStep(subDataset, remainingValues) {
     if (subDataset.length > 2) {
-        if (remainingValues.length > 0) {
+        let currentFeatureIndex = currentFeatures.indexOf(subDataset[1]);
+        if(currentFeatureIndex !== -1) {
             let foundFeature = false;
-            for (let i = 2; i < subDataset.length; i++) {
-                let featureIndex = remainingValues.indexOf(subDataset[i][0]);
-                if (featureIndex !== -1) {
+            for(let i = 2; i < subDataset.length; i++) {
+                if(subDataset[i][0] === remainingValues[currentFeatureIndex]) {
                     currentQueryPath.push(subDataset[i][0]);
                     foundFeature = true;
-                    remainingValues.splice(featureIndex, 1);
                     processQueryStep(subDataset[i], remainingValues);
                     break;
                 }
             }
-            if (!foundFeature) {
+            if(!foundFeature) {
                 currentQueryPath = [];
             }
         } else {
@@ -219,7 +220,9 @@ function processQueryStep(subDataset, remainingValues) {
 function executeQuery() {
     currentQueryPath = [];
     let parsedQuery = csvQueryInput.value().split(',');
-    processQueryStep(currentTree, parsedQuery);
+    if (parsedQuery.length === currentFeatures.length || parsedQuery.length === currentFeatures.length - 1) {
+        processQueryStep(currentTree, parsedQuery);
+    }
 }
 
 function setup() {
@@ -274,7 +277,9 @@ function drawNode(subTree, xOffset, parentYPosition, highlightQuery, prevIsHighl
     text(subTree[1], xOffset + LINE_LENGTH + TEXT_SPACING, currentYOffset);
     let savedOffset = currentYOffset;
     currentYOffset += NEWLINE_OFFSET;
-    if (highlightQuery) {
+    if (highlightQuery && prevIsHighlighted) {
+        console.log(currentQueryPath);
+        console.log(currentQueryIndex);
         currentQueryIndex++;
     }
     if (subTree.length > 2) {
