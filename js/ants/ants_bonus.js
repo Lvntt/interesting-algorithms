@@ -458,7 +458,7 @@ function BubbleFood(x, y)
     }
 }
 
-document.getElementById("canvasP").onclick = function ()
+document.getElementById("canvas-p").onclick = function ()
 {
     for (let i = 0; i < labyrinth.length; i++)
     {
