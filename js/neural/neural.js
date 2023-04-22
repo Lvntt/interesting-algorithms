@@ -48,10 +48,10 @@ class NeuralNetwork {
         let saveObj = new SaveOBJ;
 
         for (let i = 0; i < this.invisibleLayerSize; i++) {
-            saveObj.invisibleLayer.push(JSON.parse(JSON.stringify(this.invisibleLayer[i].weights)));
+            saveObj.invisibleLayer.push(this.invisibleLayer[i].weights);
         }
         for (let i = 0; i < this.outputLayerSize; i++) {
-            saveObj.outputLayer.push(JSON.parse(JSON.stringify(this.outputLayer[i].weights)));
+            saveObj.outputLayer.push(this.outputLayer[i].weights);
         }
 
         return saveObj;
@@ -60,10 +60,10 @@ class NeuralNetwork {
     // Функция для импорта весов из объекта типа SaveOBJ
     fromSaveObj(saveObj) {
         for (let i = 0; i < this.invisibleLayerSize; i++) {
-            this.invisibleLayer[i].setWeights(this.inputLayerSize, (JSON.parse(JSON.stringify(saveObj.invisibleLayer[0][i]))));
+            this.invisibleLayer[i].setWeights(this.inputLayerSize, saveObj.invisibleLayer[0][i]);
         }
         for (let i = 0; i < this.outputLayerSize; i++) {
-            this.outputLayer[i].setWeights(this.invisibleLayerSize, (JSON.parse(JSON.stringify(saveObj.outputLayer[i]))));
+            this.outputLayer[i].setWeights(this.invisibleLayerSize, saveObj.outputLayer[i]);
         }
     }
 
