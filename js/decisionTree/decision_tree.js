@@ -232,7 +232,6 @@ function setup() {
     csvInput.elt.placeholder = 'Введите выборку CSV сюда...';
     csvInput.elt.value = defaultCSV;
 
-    csvInput.style('resize', 'none');
     csvInput.size(INPUT_WIDTH, INPUT_HEIGHT_CSV);
     csvQueryInput.size(INPUT_WIDTH, INPUT_HEIGHT_QUERY);
 
