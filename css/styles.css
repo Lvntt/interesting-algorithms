@@ -1,0 +1,236 @@
+/*================ VARIABLES ================*/
+:root {
+    --first-color: #FDAD1C;
+    --second-color: #595959;
+    --third-color: #404040;
+    --body-color: #FDF7E1;
+    --black-color: #000;
+    --white-color: #fff;
+
+    --body-font-family: "Ubuntu", Calibri, Tahoma, sans-serif;
+    --small-font-size: .813rem;
+}
+
+/*================ BASE ================*/
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: var(--body-font-family);
+    background-color: var(--body-color);
+    font-size: large;
+}
+
+ul .sidebar-list{
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+main {
+    margin-inline: 6rem 1rem;
+    padding-block: 2rem;
+}
+
+/*================ SIDEBAR ================*/
+.sidebar {
+    width: 72px;
+    height: max-content;
+    position: fixed;
+    inset: 0;
+    margin: auto 0;
+}
+
+.sidebar-list {
+    position: relative;
+    background-color: var(--first-color);
+    padding-block: 70px;
+    border-radius: 0 51px 51px 0;
+    display: grid;
+    justify-content: center;
+    row-gap: 2rem;
+}
+
+.sidebar-link {
+    position: relative;
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background .4s;
+}
+
+.sidebar-link i {
+    font-size: 1.25rem;
+    color: var(--white-color);
+    transition: color .4s;
+}
+
+.sidebar-link:hover .sidebar-name {
+    opacity: 1;
+    transform: translateX(57px);
+}
+
+.sidebar-name {
+    position: absolute;
+    top: 0;
+    transform: translateX(56px);
+    background-color: var(--black-color);
+    color: var(--white-color);
+    font-size: var(--small-font-size);
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 3rem;
+    pointer-events: none;
+    transition: transform .5s, opacity .5s;
+    opacity: 0;
+}
+
+/*================ SHAPES ================*/
+.sidebar-circle-1,
+.sidebar-circle-2 {
+    width: 80px;
+    height: 80px;
+    background-color: var(--body-color);
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+}
+
+.sidebar-circle-1 {
+    top: -78px;
+}
+
+.sidebar-circle-2 {
+    bottom: -78px;
+}
+
+.sidebar-square-1,
+.sidebar-square-2 {
+    width: 35px;
+    height: 40px;
+    background-color: var(--first-color);
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+.sidebar-square-1 {
+    top: -39px;
+}
+
+.sidebar-square-2 {
+    bottom: -39px;
+}
+
+/*================ CONTENT ================*/
+
+.content {
+    margin-top: 100px;
+    margin-left: 400px;
+}
+
+.tabContent {
+    display: none;
+}
+
+.active {
+    background-color: var(--white-color);
+}
+
+.active i {
+    color: var(--first-color);
+}
+
+main {
+    height: 100vh;
+}
+
+.general {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    flex-direction: column;
+}
+
+.title {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: bold;
+    margin: 10px auto;
+}
+
+#main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+#setup-content {
+    width: 500px;
+    height: 650px;
+    margin-left: 130px;
+    font-family: "Ubuntu", sans-serif;
+    display: flex;
+    flex-direction: column;
+    background-color: #FEC04D;
+    justify-content: center;
+    align-items: center;
+    border-radius: 17%;
+}
+
+#setup-content button {
+    width: 260px;
+    height: 35px;
+    margin: 20px;
+    font-family: "Ubuntu", sans-serif;
+    background-color: #666666;
+    font-size: 17px;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    align-content: center;
+}
+
+#setup-content p {
+    color: #7e5201;
+    font-size: 17px;
+    margin: 15px;
+}
+
+.frog1 {
+    position: absolute;
+    top: 600px;
+    left: 0;
+}
+
+
+#rightContent {
+    margin-left: 40px;
+}
+
+.error {
+    width: 200px;
+    height: 200px;
+    border: 4px solid #f77777;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: #ff0000;
+    margin-right: 40px;
+}
+
+.list {
+    margin-bottom: 30px;
+}
+
+textarea {
+    resize: none;
+}
