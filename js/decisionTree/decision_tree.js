@@ -193,16 +193,16 @@ function buildTree() {
 }
 
 
-function processQueryStep(subDataset, remainingValues) {
+function processQueryStep(subDataset, query) {
     if (subDataset.length > 2) {
         let currentFeatureIndex = currentFeatures.indexOf(subDataset[1]);
         if(currentFeatureIndex !== -1) {
             let foundFeature = false;
             for(let i = 2; i < subDataset.length; i++) {
-                if(subDataset[i][0] === remainingValues[currentFeatureIndex]) {
+                if(subDataset[i][0] === query[currentFeatureIndex]) {
                     currentQueryPath.push(subDataset[i][0]);
                     foundFeature = true;
-                    processQueryStep(subDataset[i], remainingValues);
+                    processQueryStep(subDataset[i], query);
                     break;
                 }
             }
@@ -278,8 +278,6 @@ function drawNode(subTree, xOffset, parentYPosition, highlightQuery, prevIsHighl
     let savedOffset = currentYOffset;
     currentYOffset += NEWLINE_OFFSET;
     if (highlightQuery && prevIsHighlighted) {
-        console.log(currentQueryPath);
-        console.log(currentQueryIndex);
         currentQueryIndex++;
     }
     if (subTree.length > 2) {
