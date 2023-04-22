@@ -7,7 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Algorithms</title>
-    <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
 
     <!--================ FONTAWESOME ICONS ================-->
     <script src="https://kit.fontawesome.com/f1235aa355.js" crossorigin="anonymous"></script>
@@ -23,27 +23,27 @@
 <body>
 <nav class="sidebar">
     <ul class="sidebarList">
-        <a href="index.html" class="sidebarLink">
+        <a href="../index.html" class="sidebarLink">
             <i class="fa-solid fa-house"></i>
             <span class="sidebarName">Home</span>
         </a>
 
-        <a href="algorithms/astar.html" class="sidebarLink">
+        <a href="../algorithms/astar.html" class="sidebarLink">
             <i class="fa-solid fa-star"></i>
             <span class="sidebarName">A*</span>
         </a>
 
-        <a href="algorithms/clustering.html" class="sidebarLink">
+        <a href="../algorithms/clustering.html" class="sidebarLink">
             <i class="fa-solid fa-circle-nodes"></i>
             <span class="sidebarName">Clustering algorithm</span>
         </a>
 
-        <a href="algorithms/genetic.html" class="sidebarLink">
+        <a href="../algorithms/genetic.html" class="sidebarLink">
             <i class="fa-solid fa-dna"></i>
             <span class="sidebarName">Genetic algorithm</span>
         </a>
 
-        <a href="algorithms/neural.html" class="sidebarLink">
+        <a href="../algorithms/neural.html" class="sidebarLink">
             <i class="fa-solid fa-brain"></i>
             <span class="sidebarName">Neural network</span>
         </a>
@@ -58,21 +58,17 @@
 </nav>
 </body>
 
-<main>
-    <div class="general">
-        <div class="title">Над сайтом работали</div>
-        <ul class="list">
-            <li>Матвей Серегин</li>
-            <li>Руслан Гафаров</li>
-            <li>Юрий Елисеев</li>
-        </ul>
-
-        <div class="title">Реализованные алгоритмы</div>
-        <ul>
-            <li>A* (бонусный)</li>
-            <li>Алгоритм кластеризации (бонусный)</li>
-            <li>Генетический алгоритм</li>
-        </ul>
-    </div>
+<main id="mainContent">
+    <div id="algorithmWindow"></div>
+    <div id="setupContent"></div>
 </main>
+
+<script src="../../js/neural/neuron.js"></script>
+<script src="../../js/neural/neural.js"></script>
+<script src="../../js/neural/helper.js"></script>
+<script src="../../js/neural/saveobj.js"></script>
+<script src="../../js/neural/network_cell.js"></script>
+<script src="../../js/neural/network_impl.js"></script>
+<script src="../../js/neural/test.js"></script>
+
 </html>
