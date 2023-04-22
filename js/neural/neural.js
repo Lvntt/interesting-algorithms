@@ -145,15 +145,15 @@ class NeuralNetwork {
         }
     }
 
-    // Значение функции производной для текущего нейрона
-    getT1(currentNeuron) {
+    // Значение для корректировки весов на основе ошибки и значения производной
+    getWeightCorrection(currentNeuron) {
         return currentNeuron.error * NeuralNetwork.getDerivativeReLU(currentNeuron.total);
     }
 
     // Шаг градиентного спуска
     correctWeight(currentNeuron, predecessorNeuronNumber) {
-        let t1 = this.getT1(currentNeuron);
-        let newWeight = currentNeuron.weights[predecessorNeuronNumber] - t1 * this.learningRate * currentNeuron.input[predecessorNeuronNumber];
+        let weightCorrection = this.getWeightCorrection(currentNeuron);
+        let newWeight = currentNeuron.weights[predecessorNeuronNumber] - weightCorrection * this.learningRate * currentNeuron.input[predecessorNeuronNumber];
         return newWeight;
     }
 
@@ -172,7 +172,7 @@ class NeuralNetwork {
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < this.invisibleLayerSize; j++) {
                 let newWeight = this.correctWeight(this.outputLayer[i], j);
-                this.invisibleLayer[j].error += this.outputLayer[i].weights[j] * this.getT1(this.outputLayer[i]);
+                this.invisibleLayer[j].error += this.outputLayer[i].weights[j] * this.getWeightCorrection(this.outputLayer[i]);
                 this.outputLayer[i].weights[j] = newWeight;
             }
         }
